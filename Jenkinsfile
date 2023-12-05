@@ -1,10 +1,10 @@
 pipeline {
-    agent any {
+    agent any 
         environment {
-            name="selva"
+            name = "selva"
         }
         stages {
-            stage('priint env')
+            stage('print env')
             {
                 environment {
                     msg="hello world"
@@ -14,5 +14,5 @@ pipeline {
                 }
             }
         }
-    }
+    
 }

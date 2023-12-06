@@ -10,7 +10,7 @@ pipeline {
                     msg="hello world"
                 }
                 steps {
-                    sh 'printenv'
+                    sh 'cd /home/user/terraform-aws; terraform --version; terraform init'
                 }
             }
         }

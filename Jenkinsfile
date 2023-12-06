@@ -20,7 +20,13 @@ pipeline {
                 steps {
                     sh 'terraform init;terraform plan'
             }
-            }    
+            } 
+            stage ('Terraform $action')
+            {
+                steps {
+                    sh 'terraform $action --auto-approve yes'
+                }
+            }
     
 }
 }

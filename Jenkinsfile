@@ -12,7 +12,7 @@ pipeline {
             }
             stage ('checking current dir'){
                 steps {
-                    sh 'pwd;ls'
+                    sh 'pwd;ls;printenv'
         
         }
     

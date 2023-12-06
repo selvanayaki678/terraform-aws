@@ -15,6 +15,12 @@ pipeline {
                     sh 'pwd;ls;printenv'
                 }
             }
-        }
+            stage (terraform init)
+            {
+                steps {
+                    sh 'terraform init;terraform plan'
+            }
+            }    
     
+}
 }

@@ -1,18 +1,19 @@
 pipeline {
     agent any 
         environment {
-            name = "selva"
+            AWS_ACCESS_KEY_ID=credentials(aws_access_key)
+            AWS_SECRET_ACCESS_KEY=credentials(aws_access_key_value)
         }
         stages {
-            stage('print env')
-            {
-                environment {
-                    msg="hello world"
-                }
+            stage('Checkout') {
                 steps {
-                    sh 'cd /home/user/terraform-aws; terraform --version; terraform init'
-                }
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/selvanayaki678/terraform-aws.git']]])            
+                  }
             }
+            stage ('checking current dir'){
+                steps {
+                    sh 'pwd;ls'
+        
         }
     
 }

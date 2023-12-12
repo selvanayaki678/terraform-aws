@@ -1,0 +1,3 @@
+If you are not able to connect to RDS instance in local mysql workbench.
+Go to security group of RDS 
+Add inbound rule to allow all traffic from anywhere.

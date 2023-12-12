@@ -27,7 +27,7 @@ pipeline {
             stage ('Terraform apply')
             {
                 when {
-                expression { { params.apply !=false } }
+                expression { { return params.apply == true } }
                 }
                     steps {
                     sh 'cd RDS;terraform apply --auto-approve'

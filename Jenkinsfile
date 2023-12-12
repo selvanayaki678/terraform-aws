@@ -5,8 +5,12 @@ pipeline {
             AWS_SECRET_ACCESS_KEY=credentials('aws_access_key_value')
         }
         parameters {
-            booleanParam(name: 'terraform-apply', defaultValue: false)
-        }
+           
+    booleanParam(
+                                defaultValue: true, 
+                                description: '', 
+                                name: 'apply'
+                            )}
         stages {
             stage('Checkout') {
                 steps {
@@ -27,7 +31,7 @@ pipeline {
             stage ('Terraform apply')
             {
                 when {
-                expression { { params.terrafom-apply == true } }
+                expression { { params.apply != false } }
                 }
                     steps {
                     sh 'cd RDS;terraform apply --auto-approve'

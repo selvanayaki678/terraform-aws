@@ -24,13 +24,13 @@ pipeline {
                     sh 'cd RDS;terraform init;pwd;terraform plan'
             }
             } 
-            stage ('Terraform ${action}')
+            stage ('Terraform apply')
             {
                 when {
-                expression { return params.terrafom-apply }
+                expression { { params.terrafom-apply == true } }
                 }
                     steps {
-                    sh 'cd RDS;terraform ${action} --auto-approve'
+                    sh 'cd RDS;terraform apply --auto-approve'
                 }
             
 

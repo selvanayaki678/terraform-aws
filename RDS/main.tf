@@ -20,7 +20,7 @@ resource "aws_db_instance" "my-sql" {
   engine_version       = "8.0"
   instance_class       = "db.t3.micro"
   username             = "admin"
-  password             = "admin@123"
+  password             = "admin123"
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
   publicly_accessible = true

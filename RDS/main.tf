@@ -25,6 +25,8 @@ resource "aws_db_instance" "my-sql" {
   skip_final_snapshot  = true
   publicly_accessible = true
   storage_type ="standard"
-  
+  tags = {
+  name = "rds-mysql-crud"
+}
 
 }

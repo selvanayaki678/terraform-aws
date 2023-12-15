@@ -18,6 +18,7 @@ resource "aws_db_instance" "my-sql" {
   db_name              = "mysqdbcrud"
   engine               = "mysql"
   engine_version       = "8.0"
+  identifier           = "mysql-crud-rds"
   instance_class       = "db.t3.micro"
   username             = "admin"
   password             = "admin123"

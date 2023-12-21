@@ -17,12 +17,7 @@ pipeline {
             stage('Build') {
             steps {
                 script {
-                    // Ensure Docker is available
-                    def dockerHome = tool 'docker'
-                    env.PATH = "${dockerHome}/bin:${env.PATH}"
-
-                    // Pull Docker image
-                    sh 'printenv'
+                
                     sh 'docker pull nginx'
                 }
             }

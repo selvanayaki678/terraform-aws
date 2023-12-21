@@ -12,12 +12,8 @@ pipeline {
                     sh 'pwd;ls;printenv'
                 }
             }
-            stage ('checking docker commands'){
-                steps {
-                    sh 'docker pull nginx'
-                }
-            }
-            
+
+          
             stage('Build') {
             steps {
                 script {

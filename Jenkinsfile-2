@@ -22,7 +22,8 @@ pipeline {
                     env.PATH = "${dockerHome}/bin:${env.PATH}"
 
                     // Pull Docker image
-                    sh 'docker pull your-docker-image'
+                    sh 'printenv'
+                    sh 'docker pull nginx'
                 }
             }
         }

@@ -14,7 +14,7 @@ pipeline {
             }
             stage ('checking docker commands'){
                 steps {
-                    sh 'docker --help'
+                    sh 'whoami'
                 }
             }
             

@@ -5,7 +5,8 @@ pipeline {
             AWS_SECRET_ACCESS_KEY=credentials('aws_access_key_value')
         }
         parameters {      
-            booleanParam( defaultValue: true, description: '',name: 'apply' )            
+            booleanParam( defaultValue: true, description: '',name: 'apply' )
+             booleanParam( defaultValue: false, description: '',name: 'destroy' )
         }
         stages {
             stage('Checkout') {
@@ -33,7 +34,17 @@ pipeline {
                     sh 'cd RDS;terraform apply -var-file=rds-mysql.tfvars --auto-approve'
                 }           
 
-            }           
+            }  
+             stage ('Terraform destroy')
+            {
+                when {
+                expression {  return params.destroy == true  }
+                }
+                    steps {
+                    sh 'cd RDS;terraform destroy -var-file=rds-mysql.tfvars --auto-approve'
+                }           
+
+            }             
    
         }   
 }

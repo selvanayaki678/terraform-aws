@@ -6,8 +6,8 @@ pipeline {
         }
         parameters {    
     
-    booleanParam( defaultValue: true, description: '',name: 'vapply' )
-    booleanParam( defaultValue: true, description: '',name: 'eksapply' )         
+    booleanParam( defaultValue: true, description: '',name: 'apply' )
+    booleanParam( defaultValue: false, description: '',name: 'destroy' )         
         }
         stages {
             stage('Checkout') {
@@ -21,23 +21,6 @@ pipeline {
                 }
             }
             
-            stage ('VPC terraform init & Plan')
-            {
-                steps {
-                    sh 'cd EKS/VPC;terraform init;pwd;terraform plan -var-file=vpc-eks-cluster.tfvars'
-            }
-            } 
-            stage ('VPC Terraform apply')
-            {
-                when {
-                expression {  return params.vapply == true  }
-                }
-                    steps {
-                    sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'
-                }
-            
-
-            }
             stage ('EKS terraform init & Plan')
             {
                 steps {
@@ -47,7 +30,7 @@ pipeline {
             stage ('EKS Terraform apply')
             {
                 when {
-                expression {  return params.eksapply == true  }
+                expression {  return params.apply == true  }
                 }
                     steps {
                     sh 'cd EKS/cluster;terraform apply -var-file=eks-cluster-use2.tfvars --auto-approve'
@@ -55,7 +38,17 @@ pipeline {
             
 
             }
+            stage ('EKS Terraform destroy')
+            {
+                when {
+                expression {  return params.destroy == true  }
+                }
+                    steps {
+                    sh 'cd EKS/cluster;terraform destroy -var-file=eks-cluster-use2.tfvars --auto-approve'
+                }
+            
 
+            }
 
     
 }

@@ -6,7 +6,8 @@ pipeline {
         }
         parameters {      
     booleanParam( defaultValue: true, description: '',name: 'apply' )
-    booleanParam( defaultValue: true, description: '',name: 'vapply' )        
+    booleanParam( defaultValue: true, description: '',name: 'vapply' )
+    booleanParam( defaultValue: true, description: '',name: 'eksapply' )         
         }
         stages {
             stage('Checkout') {
@@ -53,6 +54,24 @@ pipeline {
             
 
             }
+                stage ('EKS terraform init & Plan')
+            {
+                steps {
+                    sh 'cd EKS/cluster;terraform init;pwd;terraform plan -var-file=eks-cluster-use2.tfvars'
+            }
+            } 
+            stage ('EKS Terraform apply')
+            {
+                when {
+                expression {  return params.eksapply == true  }
+                }
+                    steps {
+                    sh 'cd EKS/cluster;terraform apply -var-file=eks-cluster-use2.tfvars --auto-approve'
+                }
+            
+
+            }
+
 
     
 }

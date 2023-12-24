@@ -6,7 +6,7 @@ pipeline {
         }
         parameters {    
     
-    booleanParam( defaultValue: true, description: '',name: 'vapply' )
+    booleanParam( defaultValue: true, description: '',name: 'apply' )
     booleanParam( defaultValue: false, description: '',name: 'destroy' )
             
         }
@@ -31,7 +31,7 @@ pipeline {
             stage ('VPC Terraform apply')
             {
                 when {
-                expression {  return params.vapply == true  }
+                expression {  return params.apply == true  }
                 }
                     steps {
                     sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'
@@ -45,7 +45,7 @@ pipeline {
                 expression {  return params.destroy == true  }
                 }
                     steps {
-                    sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'
+                    sh 'cd EKS/VPC;terraform destroy -var-file=vpc-eks-cluster.tfvars --auto-approve'
                 }
             
 

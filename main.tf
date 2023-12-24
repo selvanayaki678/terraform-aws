@@ -14,10 +14,10 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "example" {
-  bucket = "selva-test-s3"
+  bucket = "terraform-statefile-s3-aws"
 
   tags = {
     Name        = "My bucket"
-    Environment = "Dev"
+    
   }
 }

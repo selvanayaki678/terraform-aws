@@ -6,6 +6,7 @@ pipeline {
         }
         parameters {      
     booleanParam( defaultValue: true, description: '',name: 'apply' )
+    booleanParam( defaultValue: true, description: '',name: 'vpc-apply' )        
         }
         stages {
             stage('Checkout') {
@@ -35,6 +36,24 @@ pipeline {
             
 
             }
+            stage ('VPC terraform init & Plan')
+            {
+                steps {
+                    sh 'cd EKS/VPC;terraform init;pwd;terraform plan -var-file=vpc-eks-cluster.tfvars'
+            }
+            } 
+            stage ('VPC Terraform apply')
+            {
+                when {
+                expression {  return params.vpc-apply == true  }
+                }
+                    steps {
+                    sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'
+                }
+            
+
+            }
+
     
 }
 }

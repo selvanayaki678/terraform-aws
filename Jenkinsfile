@@ -6,7 +6,7 @@ pipeline {
         }
         parameters {      
     booleanParam( defaultValue: true, description: '',name: 'apply' )
-    booleanParam( defaultValue: true, description: '',name: 'vpc-apply' )        
+    booleanParam( defaultValue: true, description: '',name: 'vapply' )        
         }
         stages {
             stage('Checkout') {
@@ -45,7 +45,7 @@ pipeline {
             stage ('VPC Terraform apply')
             {
                 when {
-                expression {  return params.vpc-apply == true  }
+                expression {  return params.vapply == true  }
                 }
                     steps {
                     sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'

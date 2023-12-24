@@ -1,5 +1,4 @@
 
-
 terraform {
   required_providers {
     aws = {
@@ -11,11 +10,11 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-east-2"
+  region = var.region
 }
 terraform {
   backend "s3" {
-    bucket = "selva-test-s3"
+    bucket = "terraform-statefile-s3-aws"
     key    = "state/rds-instance.tfstate"
     region = "us-east-2"
   }
@@ -23,10 +22,10 @@ terraform {
 
 #creating vpc for RDS instance
 resource "aws_vpc" "main" {
-  cidr_block = "192.168.20.0/24"
+  cidr_block = var.vpc_cidr
   enable_dns_hostnames = true
   tags = {
-    Name = "rds-vpc"
+    Name = var.rds_vpc_name
   }
 }
 #We are going to create Public subnet, so it Internet gateway is required.
@@ -34,24 +33,24 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "main"
+    Name = var.internet_gw_name
   }
 }
 #creating subnets
 resource "aws_subnet" "rds-s1" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "192.168.20.0/25"
-  availability_zone = "us-east-2a"
+  cidr_block = var.subnet1.cidr
+  availability_zone = var.subnet1.az
   tags = {
-    Name = "rds-subnet1"
+    Name = var.subnet1.name
   }
 }
 resource "aws_subnet" "rds-s2" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "192.168.20.128/25"
-
+  cidr_block = var.subnet2.cidr
+  availability_zone = var.subnet2.az
   tags = {
-    Name = "rds-subnet2"
+    Name = var.subnet2.name
   }
 }
 # creating route table for to route subnets traffic to internet gateway
@@ -59,7 +58,7 @@ resource "aws_route_table" "public_subnet_rt" {
   vpc_id = aws_vpc.main.id
 
   route {
-    cidr_block = "192.168.20.0/24"
+    cidr_block = var.vpc_cidr
     gateway_id = "local"
   } 
  route {
@@ -67,7 +66,7 @@ resource "aws_route_table" "public_subnet_rt" {
   gateway_id = aws_internet_gateway.gw.id
  }
   tags = {
-    Name = "public_subnet_route_table"
+    Name = var.rt1_name
   }
 }
 # Assciating the route table to the subnet
@@ -90,11 +89,11 @@ resource "aws_db_subnet_group" "default" {
 }
 # Creating security group for RDS instace to allow all traffic
 resource "aws_security_group" "example" {
-  name        = "app-security-group"
+  name        = var.security_group_name
   description = "To allow all traffic"
   vpc_id      = aws_vpc.main.id
   tags = {
-    Name = "example"
+    Name = var.security_group_name
   }
 }
 resource "aws_vpc_security_group_ingress_rule" "allow_all" {
@@ -107,20 +106,19 @@ resource "aws_vpc_security_group_ingress_rule" "allow_all" {
 }
 #Creating RDS instance
 resource "aws_db_instance" "my-sql" {
-  allocated_storage    = 5
+  allocated_storage    = var.rds.storage
   db_name              = "mysqdbcrud"
-  identifier           = "mysql-crud-rds"
+  identifier           = var.rds.name
   engine               = "mysql"
-  engine_version       = "8.0"
+  engine_version       = var.rds.engine_version
   db_subnet_group_name  = aws_db_subnet_group.default.id
   instance_class       = "db.t3.micro"
-  username             = "admin"
-  password             = "admin123"
+  username             = var.rds.username
+  password             = var.rds.password
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
-  publicly_accessible = true
+  publicly_accessible = var.rds.public_access
   storage_type = "standard"
   vpc_security_group_ids = [aws_security_group.example.id]
   depends_on = [ aws_vpc_security_group_ingress_rule.allow_all ]
 }
-

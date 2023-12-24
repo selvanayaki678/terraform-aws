@@ -1,0 +1,6 @@
+region = "us-east-2"
+vpc_name = "eks-vpc"
+subnet1_name = "eks-subnet1"
+subnet2_name = "eks-subnet2"
+eks_cluster_name = "eks-cluster"
+node_group_name = "eks_app_node_group"

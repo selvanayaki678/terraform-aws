@@ -1,0 +1,54 @@
+pipeline {
+    agent any 
+        environment {
+            AWS_ACCESS_KEY_ID=credentials('aws_access_key')
+            AWS_SECRET_ACCESS_KEY=credentials('aws_access_key_value')
+        }
+        parameters {    
+    
+    booleanParam( defaultValue: true, description: '',name: 'vapply' )
+    booleanParam( defaultValue: false, description: '',name: 'destroy' )
+            
+        }
+        stages {
+            stage('Checkout') {
+                steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/selvanayaki678/terraform-aws.git']]])            
+                  }
+            }
+            stage ('checking current dir'){
+                steps {
+                    sh 'pwd;ls;printenv'
+                }
+            }
+            
+            stage ('VPC terraform init & Plan')
+            {
+                steps {
+                    sh 'cd EKS/VPC;terraform init;pwd;terraform plan -var-file=vpc-eks-cluster.tfvars'
+            }
+            } 
+            stage ('VPC Terraform apply')
+            {
+                when {
+                expression {  return params.vapply == true  }
+                }
+                    steps {
+                    sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'
+                }
+            
+
+            }
+           stage ('VPC Terraform destory')
+            {
+                when {
+                expression {  return params.destroy == true  }
+                }
+                    steps {
+                    sh 'cd EKS/VPC;terraform apply -var-file=vpc-eks-cluster.tfvars --auto-approve'
+                }
+            
+
+            }
+        }
+}

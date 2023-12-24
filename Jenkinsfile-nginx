@@ -21,7 +21,7 @@ pipeline {
             stage ('terraform init')
             {
                 steps {
-                    sh 'cd RDS;terraform init;pwd;terraform plan -var-file=rds-mysql.tfvars'
+                    sh 'cd terraform-helm-nginx-ingress;terraform init;pwd;terraform plan '
             }
             } 
             stage ('Terraform apply')
@@ -30,7 +30,7 @@ pipeline {
                 expression {  return params.apply == true  }
                 }
                     steps {
-                    sh 'cd RDS;terraform apply -var-file=rds-mysql.tfvars --auto-approve'
+                    sh 'cd terraform-helm-nginx-ingress;terraform apply --auto-approve'
                 }           
 
             }           

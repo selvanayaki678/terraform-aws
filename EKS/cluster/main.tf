@@ -96,7 +96,7 @@ resource "aws_eks_cluster" "eks" {
   role_arn = aws_iam_role.eks-iam-role.arn
 
   vpc_config {
-    subnet_ids = [data.aws_subnet.subnet1.id]
+    subnet_ids = [data.aws_subnet.subnet1.id,data.aws_subnet.subnet2.id]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.

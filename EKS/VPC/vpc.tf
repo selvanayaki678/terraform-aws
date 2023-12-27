@@ -53,29 +53,29 @@ resource "aws_subnet" "rds-s2" {
   availability_zone = var.subnet2.availability_zone
   tags = {
     Name = var.subnet2.name
-    "kubernetes.io/role/internal-elb"="1"
+    # "kubernetes.io/role/internal-elb"="1"
   }
 }
-resource "aws_eip" "eip" {
-  domain           = "vpc"
-#   public_ipv4_pool = "ipv4pool-ec2-012345"
- tags = {
-    Name = var.eip
-  }
-}
+# resource "aws_eip" "eip" {
+#   domain           = "vpc"
+# #   public_ipv4_pool = "ipv4pool-ec2-012345"
+#  tags = {
+#     Name = var.eip
+#   }
+# }
 
-resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.eip.id
-  subnet_id     = aws_subnet.rds-s1.id
+# resource "aws_nat_gateway" "nat" {
+#   allocation_id = aws_eip.eip.id
+#   subnet_id     = aws_subnet.rds-s1.id
 
-  tags = {
-    Name = var.nat_gw_name
-  }
+#   tags = {
+#     Name = var.nat_gw_name
+#   }
 
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
   #depends_on = [aws_internet_gateway.example]
-}
+# }
 # creating route table for to route subnets traffic to internet gateway
 resource "aws_route_table" "public_subnet_rt" {
   vpc_id = aws_vpc.main.id
@@ -97,25 +97,29 @@ resource "aws_route_table_association" "rt_public_subnet1_ass" {
   subnet_id      = aws_subnet.rds-s1.id
   route_table_id = aws_route_table.public_subnet_rt.id
 }
-
-resource "aws_route_table" "private_subnet_rt" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block = var.vpc_cidr
-    gateway_id = "local"
-  } 
- route {
-  cidr_block = "0.0.0.0/0"
-  gateway_id = aws_nat_gateway.nat.id
- }
-  tags = {
-    Name = var.rt2_name
-  }
-}
-# Assciating the route table to the private subnet
-resource "aws_route_table_association" "rt_private_subnet1_ass" {
+resource "aws_route_table_association" "rt_public_subnet2_ass" {
   subnet_id      = aws_subnet.rds-s2.id
-  route_table_id = aws_route_table.private_subnet_rt.id
+  route_table_id = aws_route_table.public_subnet_rt.id
 }
+
+# resource "aws_route_table" "private_subnet_rt" {
+#   vpc_id = aws_vpc.main.id
+
+#   route {
+#     cidr_block = var.vpc_cidr
+#     gateway_id = "local"
+#   } 
+#  route {
+#   cidr_block = "0.0.0.0/0"
+#   # gateway_id = aws_nat_gateway.nat.id
+#  }
+#   tags = {
+#     Name = var.rt2_name
+#   }
+# }
+# Assciating the route table to the private subnet
+# resource "aws_route_table_association" "rt_private_subnet1_ass" {
+#   subnet_id      = aws_subnet.rds-s2.id
+#   route_table_id = aws_route_table.private_subnet_rt.id
+# }
 

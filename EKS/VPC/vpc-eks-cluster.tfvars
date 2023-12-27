@@ -14,7 +14,7 @@ subnet2 ={
     availability_zone = "us-east-2b"
 
 }
-eip = "eks-eip"
-nat_gw_name = "eks-nat"
+# eip = "eks-eip"
+# nat_gw_name = "eks-nat"
 rt1_name = "eks_public_subnet_route_table"
-rt2_name = "eks_private_subnet_route_table"
+# rt2_name = "eks_private_subnet_route_table"

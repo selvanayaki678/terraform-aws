@@ -24,15 +24,15 @@ variable "subnet2" {
     availability_zone = string
   })
 }
-variable "eip" {
-  type = string
-}
-variable "nat_gw_name" {
-  type = string
-}
+# variable "eip" {
+#   type = string
+# }
+# variable "nat_gw_name" {
+#   type = string
+# }
 variable "rt1_name" {
   type = string
 }
-variable "rt2_name" {
-  type = string
-}
+# variable "rt2_name" {
+#   type = string
+# }

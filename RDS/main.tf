@@ -107,7 +107,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_all" {
 #Creating RDS instance
 resource "aws_db_instance" "my-sql" {
   allocated_storage    = var.rds.storage
-  db_name              = "mysqdbcrud"
+  db_name              = "employee_management_system"
   identifier           = var.rds.name
   engine               = "mysql"
   engine_version       = var.rds.engine_version

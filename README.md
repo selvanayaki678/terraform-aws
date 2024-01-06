@@ -48,12 +48,15 @@ This repo is having Terraform script that automates the creation of an Amazon El
   	- **Node Group:**
   	   - IAM roles with `AmazonEKSWorkerNodePolicy` and `AmazonEKS_CNI_Policy` are created.
   	   - EKS node group is configured to utilize the created IAM roles.
+        ![image](https://github.com/selvanayaki678/employee-portal-crud/assets/67256407/02cd1254-6856-40ce-90bf-969b108d3bf1)
+
 
 5. **RDS Instance creation**
 	- Creating an AWS RDS instance with Terraform involves setting up a VPC, two public subnets in different zones, and a database subnet group.
 	- The RDS instance, specifically for MySQL, is configured using Terraform, defining details like instance ID, username, and password. 
 	- Additionally, a security group is established to permit all required incoming connections, ensuring accessibility to the RDS instance. 
-	
+	![image](https://github.com/selvanayaki678/employee-portal-crud/assets/67256407/3358534f-793b-4d50-9abd-4a07c4ca2b6b)
+
 
 
 
@@ -63,6 +66,8 @@ This repo is having Terraform script that automates the creation of an Amazon El
    - Install Terraform locally 
 2. **Terraform steps :**
    - Added all terraform commands in jenkins file
+     ![image](https://github.com/selvanayaki678/employee-portal-crud/assets/67256407/b9c1232f-b597-4c4e-8c2d-2c7b63d8100d)
+
     - Terraform init -- This initiates the download of required providers.
     - Terraform plan -- This command reveals the anticipated resources that will be created.
     - terraform apply -- This command parameterized within the pipeline, can be chosen to be executed or skipped, It results in the creation of resources in AWS.

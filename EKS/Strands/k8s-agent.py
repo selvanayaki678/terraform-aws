@@ -3,6 +3,7 @@ from strands import Agent
 from strands.models import BedrockModel
 from strands.tools.mcp import MCPClient
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
+app= BedrockAgentCoreApp()
 
 LOADBALANCER_URL = "http://aa2a00ddccde14e4291689f79b08504f-612606699.us-east-1.elb.amazonaws.com:8080/sse"
 

@@ -1,0 +1,101 @@
+---
+# 1. Namespace (optional)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mcp-system
+
+---
+# 2. ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mcp-server-sa
+  namespace: mcp-system
+
+---
+# 3. ClusterRole (full read/write access for troubleshooting)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mcp-server-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+
+---
+# 4. ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mcp-server-binding
+subjects:
+  - kind: ServiceAccount
+    name: mcp-server-sa
+    namespace: mcp-system
+roleRef:
+  kind: ClusterRole
+  name: mcp-server-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# 5. Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-server
+  namespace: mcp-system
+  labels:
+    app: mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-server
+  template:
+    metadata:
+      labels:
+        app: mcp-server
+    spec:
+      serviceAccountName: mcp-server-sa
+      containers:
+        - name: mcp-server
+          image: selvanayaki2509/k8s-mcp-server:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MCP_SERVER_MODE
+              value: "in-cluster" # optional: tells MCP to use ServiceAccount token
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+
+---
+# 6. Service (Load Balancer)
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-server
+  namespace: mcp-system
+spec:
+  selector:
+    app: mcp-server
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

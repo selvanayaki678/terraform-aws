@@ -1,38 +1,62 @@
 variable "region" {
-  type = string
+  type        = string
+  description = "AWS region to deploy resources"
 }
+
+variable "cluster_name" {
+  type        = string
+  description = "EKS cluster name"
+}
+
 variable "vpc_name" {
-  type = string
+  type        = string
+  description = "Name tag for the VPC"
 }
+
 variable "vpc_cidr" {
-  type = string
+  type        = string
+  description = "CIDR block for the VPC"
 }
+
 variable "internet_gw_name" {
-  type = string
+  type        = string
+  description = "Name tag for the Internet Gateway"
 }
-variable "subnet1" {
+
+variable "public_subnet1" {
   type = object({
-    name = string
-    cidr_block = string
+    name              = string
+    cidr_block        = string
     availability_zone = string
   })
 }
-variable "subnet2" {
+
+variable "private_subnet1" {
   type = object({
-    name = string
-    cidr_block = string
+    name              = string
+    cidr_block        = string
     availability_zone = string
   })
 }
-# variable "eip" {
-#   type = string
-# }
-# variable "nat_gw_name" {
-#   type = string
-# }
-variable "rt1_name" {
+
+variable "private_subnet2" {
+  type = object({
+    name              = string
+    cidr_block        = string
+    availability_zone = string
+  })
+}
+
+variable "public_rt_name" {
+  type        = string
+  description = "Name tag for public route table"
+}
+
+variable "private_rt_name" {
+  type        = string
+  description = "Name tag for private route table"
+}
+
+variable "ec2_key_pair_name" {
   type = string
 }
-# variable "rt2_name" {
-#   type = string
-# }

@@ -1,0 +1,6 @@
+.terraform/*
+.terraform.*
+EKS/Strands/.*
+EKS/VPC/.*
+S3/.*
+.*
